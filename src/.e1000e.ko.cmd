@@ -1,0 +1,1 @@
+cmd_/home/alex/e1000e-nonvm/src/e1000e.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /home/alex/e1000e-nonvm/src/e1000e.ko /home/alex/e1000e-nonvm/src/e1000e.o /home/alex/e1000e-nonvm/src/e1000e.mod.o

@@ -33,6 +33,7 @@
 #include <linux/tcp.h>
 #include <linux/ipv6.h>
 #include <linux/slab.h>
+#include <linux/version.h>
 #ifdef NETIF_F_TSO
 #include <net/checksum.h>
 #ifdef NETIF_F_TSO6
@@ -246,8 +247,14 @@ static void e1000e_dump(struct e1000_adapter *adapter)
 	if (netdev) {
 		dev_info(pci_dev_to_dev(adapter->pdev), "Net device Info\n");
 		pr_info("Device Name     state            trans_start      last_rx\n");
+		
+		#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,7,0)
+		pr_info("%-15s %016lX %016lX %016lX\n", netdev->name,
+			netdev->state, netdev->mem_start, netdev->last_rx);
+		#else
 		pr_info("%-15s %016lX %016lX %016lX\n", netdev->name,
 			netdev->state, netdev->trans_start, netdev->last_rx);
+		#endif
 	}
 
 	/* Print Registers */
@@ -6542,8 +6549,11 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
 		tx_ring->buffer_info[first].time_stamp = 0;
 		tx_ring->next_to_use = first;
 	}
+	#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,7,0)
+	netdev->mem_start = jiffies;
+	#else
 	netdev->trans_start = jiffies;
-
+	#endif
 	return NETDEV_TX_OK;
 }
 
@@ -7922,7 +7932,7 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	resource_size_t flash_start, flash_len;
 	static int cards_found;
 	u16 aspm_disable_flag = 0;
-	int i, err, pci_using_dac;
+	int err, pci_using_dac;
 	u16 eeprom_data = 0;
 	u16 eeprom_apme_mask = E1000_EEPROM_APME;
 	s32 rval = 0;
