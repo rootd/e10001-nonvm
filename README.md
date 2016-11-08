@@ -13,8 +13,6 @@ For the build to work properly, the currently running kernel MUST match the vers
 cd ./src
 sudo make install
 sudo modprobe e1000e
-
-
 ```
 
 Source
