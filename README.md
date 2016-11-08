@@ -1,4 +1,4 @@
-# e10001-nonvm
+# e1000e-nonvm
 
 This is the Intel e1000e Ethernet adapter driver. The NVM checksum rouine has been removed so it works flawlessly with i219-V models.
 
